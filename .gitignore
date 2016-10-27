@@ -38,3 +38,4 @@ jspm_packages
 dist
 yarn.lock
 wwwroot
+/app/site/.DS_Store
