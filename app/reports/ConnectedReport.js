@@ -1,15 +1,10 @@
 import { connect } from 'react-redux';
 import h from 'react-hyperscript';
 import R from 'ramda';
-import { XYPlot, XAxis, YAxis, HorizontalGridLines, MarkSeries } from 'react-vis';
+import { XYPlot, XAxis, YAxis, HorizontalGridLines, VerticalBarSeries, MarkSeries } from 'react-vis';
 import moment from 'moment';
 
-const renameKeys = R.curry((keysMap, obj) => {
-  return R.reduce((acc, key) => {
-    acc[keysMap[key] || key] = obj[key];
-    return acc;
-  }, {}, R.keys(obj));
-});
+import { renameKeys } from '../helpers';
 
 const report = props => {
   const {reports} = props;
@@ -25,50 +20,101 @@ const report = props => {
   const tempMax = R.path(['Weather', 'temp_max', 0])(firstSpot);
   const tempMin = R.path(['Weather', 'temp_min', 0])(firstSpot);
 
+  const toHour = R.curry(time => moment(time, 'MMM DD, YYYY HH:mm:ss').hour());
+  const rawTimeToHour = R.evolve({
+    Rawtime: toHour
+  });
+
+  const toMoment = R.curry(time => moment(time, 'MMM DD, YYYY HH:mm:ss'));
+
+
   const tidesPath = R.pathOr([], ['Tide', 'dataPoints']);
   const tideProps = R.pickAll(['height', 'Rawtime']);
 
+  const sunPointsPath = R.pathOr([], ['Tide', 'SunPoints']);
+  const sunpointPropEq = R.propEq('type');
 
-  //Rawtime: "October 27, 2016 13:00:00"
-  //Localtime: "2016-10-27 12:00:00"
-  const momentToHour = R.curry(time =>  moment(time, 'MMM DD, YYYY HH:mm:ss').hour() );
-  const rawTimeToHour = R.evolve({Rawtime: momentToHour});
+  const sunpoint = type => {
+    return R.pipe(sunPointsPath,
+      R.filter(sunpointPropEq(type)),
+      R.map(R.prop('Rawtime')),
+      R.map(toMoment),
+    );
+  };
+
+  const sunrise = sunpoint('Sunrise');
+  const sunset = sunpoint('Sunset');
+
+  const toHour2 = R.curry(m => m.format('HH'));
+  const toMinute = R.curry(m => m.format('mm'));
+
+  const toFraction = R.curry(m => {
+    return parseFloat(toHour2(m) + '.' + 60 / toMinute(m));
+  });
+
 
 
   const tides = R.pipe(
     tidesPath,
     R.map(tideProps),
     R.map(rawTimeToHour),
-    R.map(renameKeys({height: 'y', Rawtime: 'x'})),
+    R.map(renameKeys({
+      height: 'y',
+      Rawtime: 'x'
+    })),
     R.reject(R.propEq('y', 0))
   );
 
-  let tmp = tides(firstSpot);
-  console.log( tmp );
+  let sunrisePlot = R.defaultTo('', R.head(R.map(toFraction, sunrise(firstSpot))));
+  let sunsetPlot = R.defaultTo('', R.head(R.map(toFraction, sunset(firstSpot))));
+
+  console.log(sunrisePlot);
 
 
 
   return (
   h('div', {}, [
     h('h1', {}, 'Southern Ca'),
+
+
+    h('h3', {}, 'Tides'),
+    h(XYPlot, {
+      width: 480,
+      height: 120,
+      animation: true
+    }, [
+      h(HorizontalGridLines),
+      h(VerticalBarSeries, {
+        data: tides(firstSpot)
+      }),
+      h(MarkSeries, {
+        data: [{
+          y: 5,
+          x: 11
+        }],
+        size: 13,
+        opacity: 0.8,
+        color: "red"
+      }),
+      h(MarkSeries, {
+        data: [{
+          y: 5,
+          x: 11
+        }],
+        size: 13,
+        opacity: 0.5,
+        color: "navy"
+      }),
+      h(XAxis),
+      h(YAxis)
+    ]),
+
     h('h2', {}, 'Spot: ' + name),
     h('p', {}, 'Condition: ' + condition),
     h('p', {}, 'Surf: ' + surfRange),
     h('p', {}, 'Weather: ' + tempMin + '-' + tempMax),
     h('p', {}, 'Water: ' + waterTempMin + '-' + waterTempMax),
 
-    h(XYPlot, {
-      width: 480,
-      height: 240
-    }, [
-      h(HorizontalGridLines),
-      h(MarkSeries, {
-        data: tides(firstSpot)
-      },
-      ),
-      h(XAxis),
-      h(YAxis)
-    ])
 
   ])
   );
