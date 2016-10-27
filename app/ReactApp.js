@@ -3,11 +3,12 @@ import h from 'react-hyperscript';
 
 
 
+import ConnectedReport from './reports/ConnectedReport';
 
 const App = () => {
   return (
-    h('h1', {}, [
-      'Hello, World!'
+    h('div', {}, [
+      h(ConnectedReport)
     ])
   );
 };

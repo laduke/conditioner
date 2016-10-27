@@ -2,17 +2,10 @@ import { applyMiddleware, combineReducers } from 'redux';
 
 
 
-const helloReducer = (state = {}, action) => {
-
-  switch (action.type) {
-    default: {
-      return state;
-    }
-  }
-};
+import reports from './reports/reducer';
 
 let reducers = combineReducers({
-  helloReducer
+  reports
 });
 
 
