@@ -40,11 +40,9 @@
     "webpack": "^1.13.2"
   },
   "devDependencies": {
-    "chai": "^3.5.0",
     "eslint": "^3.8.1",
     "eslint-plugin-react": "^6.4.1",
     "faucet": "^0.0.1",
-    "mocha": "^3.1.2",
     "sinon": "^1.17.6",
     "sinon-as-promised": "^4.0.2",
     "supertest": "^2.0.1",
