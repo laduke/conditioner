@@ -7,6 +7,8 @@ import { AppContainer } from 'react-hot-loader';
 
 
 require('./index.html');
+require('./reports/style.scss');
+
 import store from './store';
 import App from './ReactApp';
 import {fetchSpot} from './reports/actions.js';
