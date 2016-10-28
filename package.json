@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node ./app/server.js",
     "dev": "nodemon ./app/server.js --watch app & webpack-dev-server --config ./webpack.development.config.js --hot ",
-    "test": "tape 'app/**/*.test.js'",
+    "test": "babel-tape-runner 'app/**/*.test.js'",
     "build": "NODE_ENV=production webpack -p --config webpack.production.config.js --progress --colors"
   },
   "engines": {
@@ -48,6 +48,9 @@
     "webpack": "^1.13.2"
   },
   "devDependencies": {
+    "babel-cli": "^6.18.0",
+    "babel-preset-node6": "^11.0.0",
+    "babel-tape-runner": "^2.0.1",
     "eslint": "^3.8.1",
     "eslint-plugin-react": "^6.4.1",
     "faucet": "^0.0.1",
@@ -55,6 +58,7 @@
     "sinon-as-promised": "^4.0.2",
     "supertest": "^2.0.1",
     "tape": "^4.6.2",
+    "tape-redux": "^0.0.3",
     "webpack-dev-middleware": "^1.8.4",
     "webpack-dev-server": "^1.16.2",
     "webpack-hot-middleware": "^2.13.0"

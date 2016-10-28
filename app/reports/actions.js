@@ -11,11 +11,11 @@ export function fetchSpot(spotID) {
 export const REQUEST_SPOT = 'REQUEST_SPOT';
 export const RECEIVE_SPOT = 'RECEIVE_SPOT';
 
-function requestSpot() {
+export const requestSpot = () => {
   return {
     type: REQUEST_SPOT
   };
-}
+};
 
 function receiveSpot(json) {
   return {
