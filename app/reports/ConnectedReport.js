@@ -14,19 +14,21 @@ const momentToMinute = R.curry(m => m.format('mm'));
 const report = props => {
   const {reports} = props;
 
-  const firstKey = R.compose(R.head, R.keys)(reports);
-  const firstSpot = R.prop(firstKey)(reports);
 
-  return (
-  h('div', {}, [
-    h('h1', {}, 'Socal'),
+  return h('div', {}, [
+    xyPlot(R.head(R.values(reports))),
+    R.values(R.map(spotReport, reports))
+  ]);
+};
 
-    xyPlot(firstSpot),
-    spotName(firstSpot),
-    spotCondition(firstSpot),
-    spotSurfRange(firstSpot),
-    spotAirTemperature(firstSpot),
-    spotWaterTemperature(firstSpot)
+const spotReport = spot => {
+
+  return ( h('div', {key: spot.id}, [
+    spotName(spot),
+    spotCondition(spot),
+    spotSurfRange(spot),
+    spotAirTemperature(spot),
+    spotWaterTemperature(spot)
   ])
   );
 };

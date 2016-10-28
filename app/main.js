@@ -14,6 +14,7 @@ import App from './ReactApp';
 import {fetchSpot} from './reports/actions.js';
 
 store.dispatch(fetchSpot(4233));
+store.dispatch(fetchSpot(4874));
 
 ReactDOM.render(
   h(AppContainer, {}, [
