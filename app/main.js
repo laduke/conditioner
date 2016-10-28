@@ -20,9 +20,11 @@ store.dispatch(fetchSpot(4233));
 store.dispatch(fetchSpot(4874));
 
 ReactDOM.render(
-  h(Provider, {store: store}, [
+  h(Provider, {
+    store: store
+  }, [
     h(AppContainer, {}, [
-    h(MuiThemeProvider, {}, [
+      h(MuiThemeProvider, {}, [
         h(App)
       ])
     ])
@@ -40,7 +42,9 @@ if (module.hot) {
         h(Provider, {
           store: store
         }, [
-          h(App)
+          h(MuiThemeProvider, {}, [
+            h(App)
+          ])
         ])
       ]),
       document.getElementById('root')
