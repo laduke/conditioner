@@ -35,7 +35,6 @@ const spotReport = spot => {
         spotName(spot),
         spotWind(spot),
         spotSurfRange(spot),
-        spotAirTemperature(spot),
         spotWaterTemperature(spot)
       ])
     ])
@@ -64,24 +63,27 @@ const spotSurfRange = spot => {
 
   return h(Row, {}, [
     h(Col, {xs: 6}, [
-      h('p', {}, 'Surf: ' + surfRangePath(spot))
+      h('span', {}, 'Surf: ' + surfRangePath(spot))
     ]),
     h(Col, {xs: 6}, [
-      h('p', {}, 'Condition: ' + conditionPath(spot))
+      h('span', {}, 'Condition: ' + conditionPath(spot))
     ])
   ]);
-};
-const spotAirTemperature = spot => {
-  const tempMax = R.path(['Weather', 'temp_max', 0]);
-  const tempMin = R.path(['Weather', 'temp_min', 0]);
-
-  return h('p', {}, 'Weather: ' + tempMin(spot) + '-' + tempMax(spot));
 };
 const spotWaterTemperature = spot => {
   const waterTempMax = R.path(['WaterTemp', 'watertemp_max']);
   const waterTempMin = R.path(['WaterTemp', 'watertemp_min']);
 
-  return h('p', {}, 'Water: ' + waterTempMin(spot) + '-' + waterTempMax(spot));
+  const tempMax = R.path(['Weather', 'temp_max', 0]);
+  const tempMin = R.path(['Weather', 'temp_min', 0]);
+
+  return h(Row, {}, [
+    h(Col, {xs: 6}, [
+      h('span', {}, 'Weather: ' + tempMin(spot) + '-' + tempMax(spot))
+    ]),
+    h(Col, {xs: 6}, [
+      h('span', {}, 'Water: ' + waterTempMin(spot) + '-' + waterTempMax(spot))    ])
+  ]);
 };
 
 const regionGraph = spot => {
