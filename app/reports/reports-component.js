@@ -20,7 +20,7 @@ export const reports = props => {
 
   return h(Row, {}, [
     h(Col, {xs: 12}, [
-      xyPlot(R.head(R.values(reports))),
+      regionGraph(R.head(R.values(reports))),
       //h(Row, {}, h(Col, {xs: 12}, h('div',{}, '.'))),
       R.values(R.map(spotReport, reports))
     ])
@@ -82,7 +82,7 @@ const spotWaterTemperature = spot => {
   return h('p', {}, 'Water: ' + waterTempMin(spot) + '-' + waterTempMax(spot));
 };
 
-const xyPlot = spot => {
+const regionGraph = spot => {
   const graphHeight = 120;
 
   //ugh
