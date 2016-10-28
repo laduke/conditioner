@@ -3,6 +3,9 @@ import h from 'react-hyperscript';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import { AppContainer } from 'react-hot-loader';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import injectTapEventPlugin from 'react-tap-event-plugin';
+injectTapEventPlugin();
 
 
 
@@ -18,8 +21,10 @@ store.dispatch(fetchSpot(4874));
 
 ReactDOM.render(
   h(AppContainer, {}, [
-    h(Provider, {store: store}, [
-      h(App)
+    h(MuiThemeProvider, {}, [
+      h(Provider, {store: store}, [
+        h(App)
+      ])
     ])
   ]),
   document.getElementById('root')

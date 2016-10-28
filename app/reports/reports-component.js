@@ -2,6 +2,7 @@ import h from 'react-hyperscript';
 import R from 'ramda';
 import moment from 'moment';
 import { XYPlot, XAxis, YAxis, HorizontalGridLines, VerticalBarSeries, MarkSeries } from 'react-vis';
+import Paper from 'material-ui/Paper';
 
 import { renameKeys } from '../helpers';
 const nameProp = R.prop('name');
@@ -14,7 +15,7 @@ export const reports = props => {
   const { reports } = props;
 
 
-  return h('div', {}, [
+  return h(Paper, {}, [
     xyPlot(R.head(R.values(reports))),
     R.values(R.map(spotReport, reports))
   ]);
