@@ -38,6 +38,10 @@ module.exports = {
           plugins: ["react-hot-loader/babel"]
         }
       }, {
+        test: /\.jsx?$/,
+        loader: 'jsx?harmony',
+        include: /materia-ui/
+      }, {
         test: /\.html$/,
         exclude: /node_modules/,
         loader: 'file?name=[name].[ext]'
@@ -45,6 +49,10 @@ module.exports = {
         test: /\.scss$/,
         loader: ExtractTextPlugin.extract('style-loader', 'css-loader!sass-loader'),
         include: path.join(__dirname, 'app')
+      }, {
+        test: /\.css$/,
+        loader: 'style!css?modules',
+        include: /flexboxgrid/
       }
     ]
   }

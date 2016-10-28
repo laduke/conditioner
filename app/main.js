@@ -14,15 +14,15 @@ require('./reports/style.scss');
 
 import store from './store';
 import App from './ReactApp';
-import {fetchSpot} from './reports/actions.js';
+import { fetchSpot } from './reports/actions.js';
 
 store.dispatch(fetchSpot(4233));
 store.dispatch(fetchSpot(4874));
 
 ReactDOM.render(
-  h(AppContainer, {}, [
+  h(Provider, {store: store}, [
+    h(AppContainer, {}, [
     h(MuiThemeProvider, {}, [
-      h(Provider, {store: store}, [
         h(App)
       ])
     ])
@@ -31,13 +31,15 @@ ReactDOM.render(
 );
 
 
-if(module.hot){
+if (module.hot) {
   module.hot.accept('./ReactApp', () => {
     let App = require('./ReactApp').default;
 
     ReactDOM.render(
       h(AppContainer, {}, [
-        h(Provider, {store: store}, [
+        h(Provider, {
+          store: store
+        }, [
           h(App)
         ])
       ]),

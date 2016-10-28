@@ -3,6 +3,9 @@ import R from 'ramda';
 import moment from 'moment';
 import { XYPlot, XAxis, YAxis, HorizontalGridLines, VerticalBarSeries, MarkSeries } from 'react-vis';
 import Paper from 'material-ui/Paper';
+import {Card} from 'material-ui/Card';
+
+import { Row, Col } from 'react-flexbox-grid/lib/index';
 
 import { renameKeys } from '../helpers';
 const nameProp = R.prop('name');
@@ -15,26 +18,46 @@ export const reports = props => {
   const { reports } = props;
 
 
-  return h(Paper, {}, [
-    xyPlot(R.head(R.values(reports))),
-    R.values(R.map(spotReport, reports))
+  return h(Row, {}, [
+    h(Col, {xs: 12}, [
+      xyPlot(R.head(R.values(reports))),
+      //h(Row, {}, h(Col, {xs: 12}, h('div',{}, '.'))),
+      R.values(R.map(spotReport, reports))
+    ])
   ]);
 };
 
 const spotReport = spot => {
 
-  return ( h('div', {key: spot.id}, [
-    spotName(spot),
-    spotCondition(spot),
-    spotSurfRange(spot),
-    spotAirTemperature(spot),
-    spotWaterTemperature(spot)
+  return ( h(Row, {key: spot.id}, [
+    h(Col, {xs: 12}, [
+      h(Paper, {}, [
+        spotName(spot),
+        spotWind(spot),
+        spotCondition(spot),
+        spotSurfRange(spot),
+        spotAirTemperature(spot),
+        spotWaterTemperature(spot)
+      ])
+    ])
   ])
   );
 };
 
 const spotName = spot => {
-  return h('h2', {}, nameProp(spot));
+  return h(Row, {center: 'xs'}, [
+    h(Col, {xs: 12}, [
+      h('span', {}, nameProp(spot))
+    ])
+  ]);
+};
+
+const spotWind = spot => {
+  return h(Row, {center: 'xs'}, [
+    h(Col, {xs: 12}, [
+      h('h2', {}, 'Wind goes here')
+    ])
+  ]);
 };
 const spotCondition = spot => {
   const conditionPath = R.path(['Analysis', 'generalCondition']);
@@ -60,19 +83,37 @@ const spotWaterTemperature = spot => {
 };
 
 const xyPlot = spot => {
+  const graphHeight = 120;
 
-  return h(XYPlot, {
-    width: 480,
-    height: 120,
-    animation: true
-  }, [
-    h(HorizontalGridLines),
-    tidesElement(spot),
-    sunPointsElement(spot),
-    h(XAxis, {
-      tickTotal: 24
-    }),
-    h(YAxis)
+  //ugh
+  //not sure why, but the XYPlot
+  //isn't taking up space
+  //so the paper doesn't have
+  //a bottom margin
+  const style = {
+    height: graphHeight + 16
+  };
+
+  return h(Row, {}, [
+    h(Col, {xs: 12}, [
+      h('div', {style: style}, [
+        h(Paper, {}, [
+          h(XYPlot, {
+            width: 360,
+            height: graphHeight,
+            animation: true
+          }, [
+            h(HorizontalGridLines),
+            tidesElement(spot),
+            sunPointsElement(spot),
+            h(XAxis, {
+              tickTotal: 24
+            }),
+            h(YAxis)
+          ])
+        ])
+      ])
+    ])
   ]);
 };
 
