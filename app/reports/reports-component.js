@@ -34,7 +34,6 @@ const spotReport = spot => {
       h(Paper, {}, [
         spotName(spot),
         spotWind(spot),
-        spotCondition(spot),
         spotSurfRange(spot),
         spotAirTemperature(spot),
         spotWaterTemperature(spot)
@@ -59,15 +58,18 @@ const spotWind = spot => {
     ])
   ]);
 };
-const spotCondition = spot => {
-  const conditionPath = R.path(['Analysis', 'generalCondition']);
-
-  return h('p', {}, 'Condition: ' + conditionPath(spot));
-};
 const spotSurfRange = spot => {
   const surfRangePath = R.path(['Analysis', 'surfRange', 0]);
+  const conditionPath = R.path(['Analysis', 'generalCondition']);
 
-  return h('p', {}, 'Surf: ' + surfRangePath(spot));
+  return h(Row, {}, [
+    h(Col, {xs: 6}, [
+      h('p', {}, 'Surf: ' + surfRangePath(spot))
+    ]),
+    h(Col, {xs: 6}, [
+      h('p', {}, 'Condition: ' + conditionPath(spot))
+    ])
+  ]);
 };
 const spotAirTemperature = spot => {
   const tempMax = R.path(['Weather', 'temp_max', 0]);
@@ -91,7 +93,7 @@ const regionGraph = spot => {
   //so the paper doesn't have
   //a bottom margin
   const style = {
-    height: graphHeight + 16
+    height: graphHeight + 18
   };
 
   return h(Row, {}, [
