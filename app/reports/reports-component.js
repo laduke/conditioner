@@ -1,11 +1,11 @@
 import h from 'react-hyperscript';
 import R from 'ramda';
 import moment from 'moment';
-import { XYPlot, XAxis, YAxis, HorizontalGridLines, VerticalBarSeries, MarkSeries } from 'react-vis';
-import Paper from 'material-ui/Paper';
-import {Card, CardActions, CardHeader, CardMedia, CardTitle, CardText} from 'material-ui/Card';
-
+import {Legend, AreaChart, Area, CartesianGrid, XAxis, YAxis, Tooltip} from 'recharts';
 import Divider from 'material-ui/Divider';
+
+import {List, ListItem} from 'material-ui/List';
+import Subheader from 'material-ui/Subheader';
 
 import { Row, Col } from 'react-flexbox-grid/lib/index';
 
@@ -23,9 +23,17 @@ export const reports = props => {
   return h(Row, {}, [
     h(Col, {xs: 12}, [
 
-      h(Row, {}, [
+      h(Row, {center: 'xs'}, [
         h(Col, {xs: 12}, [
-          regionGraph(R.head(R.values(reports))),
+          h('div', {}, [
+            h('h1', {}, 'Socal')
+          ])
+        ])
+      ]),
+
+      h(Row, {center: 'xs'}, [
+        h(Col, {xs: 12}, [
+          tideGraph(R.head(R.values(reports))),
         ])
       ]),
 
@@ -43,12 +51,23 @@ export const reports = props => {
 const spotReport = spot => {
 
   return (
-    h(Card, {key: spot.id}, [
-      h(CardHeader, {title: spotName(spot)} ),
+    h('div', {key: spot.id}, [
       //h(CardText, {}, spotWind(spot)),
-      h(CardTitle, {title: spotCondition(spot), subtitle: spotSurfRange(spot)}),
-      h(CardText, {}, spotAirTemperature(spot)),
-      h(CardText, {}, spotWaterTemperature(spot))
+      h(Divider),
+      h(List, {}, [
+        h(Subheader, spotName(spot) ),
+        h(ListItem, {}, [
+          h('span', {}, 'Conditions: ' ),
+          h('span', {}, spotCondition(spot)),
+          h('span', {}, ' '),
+          h('span', {}, spotSurfRange(spot))
+        ]),
+        h(ListItem, {}, [
+          h('span', {}, spotAirTemperature(spot)),
+          h('span', {}, ' '),
+          h('span', {}, spotWaterTemperature(spot))
+        ])
+      ])
     ])
   );
 };
@@ -83,108 +102,43 @@ const spotWaterTemperature = spot => {
   return 'Water: ' + waterTempMin(spot) + '-' + waterTempMax(spot);
 };
 
-const regionGraph = spot => {
-  const graphHeight = 120;
+const tideGraph = spot => {
 
-  //ugh
-  //not sure why, but the XYPlot
-  //isn't taking up space
-  //so the paper doesn't have
-  //a bottom margin
-  const style = {
-    height: graphHeight + 16
-  };
-
-  return h(Paper, {zDepth: 2}, [
-    h(XYPlot, {
-      width: 360,
-      height: graphHeight,
-      animation: true
-    }, [
-      h(HorizontalGridLines),
-      tidesElement(spot),
-      sunPointsElement(spot),
-      h(XAxis, {
-        tickTotal: 24
-      }),
-      h(YAxis)
+  return h('div', {}, [
+    h('h2', 'Tides'),
+    h(AreaChart, {width: 368, height: 120, margin:{left: -40, top: 10, right: 20}, data: tideData(spot) }, [
+      h(Area, {type: 'monotone', dataKey: 'Height', stroke: '#8884d8' }),
+      h(CartesianGrid, {stroke: '#ccc'}),
+      h(XAxis, {dataKey: 'Time'}),
+      h(YAxis),
+      h(Tooltip)
     ])
   ]);
 
 };
 
 
-const tidesElement = spot => {
+const rawTimeToHour = R.evolve({
+  Rawtime: R.pipe(timeToMoment, momentToHour)
+});
+const tidesPath = R.pathOr([], ['Tide', 'dataPoints']);
+const tideProps = R.pickAll(['height', 'Rawtime']);
+const tooEarly = R.propSatisfies(time => time < 5, 'Time');
+const tooLate = R.propSatisfies(time => time > 21, 'Time');
 
-  const rawTimeToHour = R.evolve({
-    Rawtime: R.pipe(timeToMoment, momentToHour)
-  });
-  const tidesPath = R.pathOr([], ['Tide', 'dataPoints']);
-  const tideProps = R.pickAll(['height', 'Rawtime']);
+const tideData = R.pipe(
+  tidesPath,
+  R.take(30),
+  R.map(tideProps),
+  R.map(rawTimeToHour),
+  R.reject(R.propEq('height', 0)),
+  R.reject(R.propEq('height', 0)),
+  R.map(renameKeys({
+    Rawtime: 'Time',
+    height: 'Height'
+  })),
+  R.reject(tooEarly),
+  R.reject(tooLate)
+);
 
-  const tides = R.pipe(
-    tidesPath,
-    R.take(30),
-    R.map(tideProps),
-    R.map(rawTimeToHour),
-    R.map(renameKeys({
-      height: 'y',
-      Rawtime: 'x'
-    })),
-    R.reject(R.propEq('y', 0))
-  );
 
-  return h(VerticalBarSeries, {
-    data: tides(spot),
-    color: "teal"
-  });
-};
-
-const sunPointsElement = spot => {
-
-  const sunPointsPath = R.pathOr([], ['Tide', 'SunPoints']);
-  const sunpointPropEq = R.propEq('type');
-
-  const hourWithDecimalMinutes = R.curry(m => {
-    return parseFloat(momentToHour(m) + '.' + 60 / momentToMinute(m));
-  });
-
-  const sunpointTime = type => {
-    return R.pipe(
-      sunPointsPath,
-      R.filter(sunpointPropEq(type)),
-      R.map(R.prop('Rawtime')),
-      R.map(timeToMoment),
-      R.map(hourWithDecimalMinutes)
-    );
-  };
-
-  const sunrise = sunpointTime('Sunrise');
-  const sunset = sunpointTime('Sunset');
-
-  const sunrisePlot = R.defaultTo(0, R.head(sunrise(spot)));
-  const sunsetPlot = R.defaultTo(0, R.head(sunset(spot)));
-
-  return [
-    h(MarkSeries, {
-      key: 'rise',
-      size: 10,
-      data: [{
-        y: 3,
-        x: sunrisePlot
-      }],
-      opacity: 0.8,
-      color: "red"
-    }),
-    h(MarkSeries, {
-      key: 'set',
-      size: 10,
-      data: [{
-        y: 3,
-        x: sunsetPlot
-      }],
-      opacity: 0.8,
-      color: "navy"
-    })
-  ];
-};
