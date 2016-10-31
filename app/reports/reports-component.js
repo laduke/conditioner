@@ -104,7 +104,7 @@ const spotWaterTemperature = spot => {
 
 const tideGraph = spot => {
 
-  return h('div', {zDepth: 2}, [
+  return h('div', {}, [
     h('h2', 'Tides'),
     h(AreaChart, {width: 368, height: 120, margin:{left: -40, top: 10, right: 20}, data: tideData(spot) }, [
       h(Area, {type: 'monotone', dataKey: 'Height', stroke: '#8884d8' }),
