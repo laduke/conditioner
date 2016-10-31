@@ -1,7 +1,7 @@
 import h from 'react-hyperscript';
 import R from 'ramda';
 import moment from 'moment';
-import {Legend, AreaChart, Area, LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip} from 'recharts';
+import {Legend, AreaChart, Area, CartesianGrid, XAxis, YAxis, Tooltip} from 'recharts';
 import Divider from 'material-ui/Divider';
 
 import {List, ListItem} from 'material-ui/List';
