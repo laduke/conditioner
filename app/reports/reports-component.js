@@ -2,10 +2,10 @@ import h from 'react-hyperscript';
 import R from 'ramda';
 import moment from 'moment';
 import {Legend, AreaChart, Area, LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip} from 'recharts';
-import Paper from 'material-ui/Paper';
-import {Card, CardActions, CardHeader, CardMedia, CardTitle, CardText} from 'material-ui/Card';
-
 import Divider from 'material-ui/Divider';
+
+import {List, ListItem} from 'material-ui/List';
+import Subheader from 'material-ui/Subheader';
 
 import { Row, Col } from 'react-flexbox-grid/lib/index';
 
@@ -23,7 +23,15 @@ export const reports = props => {
   return h(Row, {}, [
     h(Col, {xs: 12}, [
 
-      h(Row, {}, [
+      h(Row, {center: 'xs'}, [
+        h(Col, {xs: 12}, [
+          h('div', {}, [
+            h('h1', {}, 'Socal')
+          ])
+        ])
+      ]),
+
+      h(Row, {center: 'xs'}, [
         h(Col, {xs: 12}, [
           tideGraph(R.head(R.values(reports))),
         ])
@@ -43,12 +51,23 @@ export const reports = props => {
 const spotReport = spot => {
 
   return (
-    h(Card, {key: spot.id}, [
-      h(CardHeader, {title: spotName(spot)} ),
+    h('div', {key: spot.id}, [
       //h(CardText, {}, spotWind(spot)),
-      h(CardTitle, {title: spotCondition(spot), subtitle: spotSurfRange(spot)}),
-      h(CardText, {}, spotAirTemperature(spot)),
-      h(CardText, {}, spotWaterTemperature(spot))
+      h(Divider),
+      h(List, {}, [
+        h(Subheader, spotName(spot) ),
+        h(ListItem, {}, [
+          h('span', {}, 'Conditions: ' ),
+          h('span', {}, spotCondition(spot)),
+          h('span', {}, ' '),
+          h('span', {}, spotSurfRange(spot))
+        ]),
+        h(ListItem, {}, [
+          h('span', {}, spotAirTemperature(spot)),
+          h('span', {}, ' '),
+          h('span', {}, spotWaterTemperature(spot))
+        ])
+      ])
     ])
   );
 };
@@ -85,7 +104,7 @@ const spotWaterTemperature = spot => {
 
 const tideGraph = spot => {
 
-  return h(Paper, {zDepth: 2}, [
+  return h('div', {zDepth: 2}, [
     h('h2', 'Tides'),
     h(AreaChart, {width: 368, height: 120, margin:{left: -40, top: 10, right: 20}, data: tideData(spot) }, [
       h(Area, {type: 'monotone', dataKey: 'Height', stroke: '#8884d8' }),
