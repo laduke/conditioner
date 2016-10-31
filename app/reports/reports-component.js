@@ -45,7 +45,7 @@ const spotReport = spot => {
   return (
     h(Card, {key: spot.id}, [
       h(CardHeader, {title: spotName(spot)} ),
-      h(CardText, {}, spotWind(spot)),
+      //h(CardText, {}, spotWind(spot)),
       h(CardTitle, {title: spotCondition(spot), subtitle: spotSurfRange(spot)}),
       h(CardText, {}, spotAirTemperature(spot)),
       h(CardText, {}, spotWaterTemperature(spot))
