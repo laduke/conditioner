@@ -87,13 +87,12 @@ const tideGraph = spot => {
 
   return h(Paper, {zDepth: 2}, [
     h('h2', 'Tides'),
-    h(AreaChart, {width: 600, height: 120, margin:{top: 10, right: 20}, data: tideData(spot) }, [
+    h(AreaChart, {width: 368, height: 120, margin:{left: -40, top: 10, right: 20}, data: tideData(spot) }, [
       h(Area, {type: 'monotone', dataKey: 'Height', stroke: '#8884d8' }),
       h(CartesianGrid, {stroke: '#ccc'}),
       h(XAxis, {dataKey: 'Time'}),
       h(YAxis),
-      h(Tooltip),
-      h(Legend )
+      h(Tooltip)
     ])
   ]);
 
