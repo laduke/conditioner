@@ -3,7 +3,9 @@ import R from 'ramda';
 import moment from 'moment';
 import { XYPlot, XAxis, YAxis, HorizontalGridLines, VerticalBarSeries, MarkSeries } from 'react-vis';
 import Paper from 'material-ui/Paper';
-import {Card} from 'material-ui/Card';
+import {Card, CardActions, CardHeader, CardMedia, CardTitle, CardText} from 'material-ui/Card';
+
+import Divider from 'material-ui/Divider';
 
 import { Row, Col } from 'react-flexbox-grid/lib/index';
 
@@ -20,70 +22,65 @@ export const reports = props => {
 
   return h(Row, {}, [
     h(Col, {xs: 12}, [
-      regionGraph(R.head(R.values(reports))),
-      //h(Row, {}, h(Col, {xs: 12}, h('div',{}, '.'))),
-      R.values(R.map(spotReport, reports))
+
+      h(Row, {}, [
+        h(Col, {xs: 12}, [
+          regionGraph(R.head(R.values(reports))),
+        ])
+      ]),
+
+      h(Row, {}, [
+        h(Col, {xs: 12}, [
+          R.values(R.map(spotReport, reports))
+        ])
+      ])
+
     ])
+
   ]);
 };
 
 const spotReport = spot => {
 
-  return ( h(Row, {key: spot.id}, [
-    h(Col, {xs: 12}, [
-      h(Paper, {}, [
-        spotName(spot),
-        spotWind(spot),
-        spotSurfRange(spot),
-        spotWaterTemperature(spot)
-      ])
+  return (
+    h(Card, {key: spot.id}, [
+      h(CardHeader, {title: spotName(spot)} ),
+      h(CardText, {}, spotWind(spot)),
+      h(CardTitle, {title: spotCondition(spot), subtitle: spotSurfRange(spot)}),
+      h(CardText, {}, spotAirTemperature(spot)),
+      h(CardText, {}, spotWaterTemperature(spot))
     ])
-  ])
   );
 };
 
 const spotName = spot => {
-  return h(Row, {center: 'xs'}, [
-    h(Col, {xs: 12}, [
-      h('span', {}, nameProp(spot))
-    ])
-  ]);
+  return nameProp(spot);
 };
 
 const spotWind = spot => {
-  return h(Row, {center: 'xs'}, [
-    h(Col, {xs: 12}, [
-      h('h2', {}, 'Wind goes here')
-    ])
-  ]);
+  return 'Wind goes here';
+};
+const spotCondition = spot => {
+  const conditionPath = R.path(['Analysis', 'generalCondition']);
+
+  return conditionPath(spot);
 };
 const spotSurfRange = spot => {
   const surfRangePath = R.path(['Analysis', 'surfRange', 0]);
-  const conditionPath = R.path(['Analysis', 'generalCondition']);
 
-  return h(Row, {}, [
-    h(Col, {xs: 6}, [
-      h('span', {}, 'Surf: ' + surfRangePath(spot))
-    ]),
-    h(Col, {xs: 6}, [
-      h('span', {}, 'Condition: ' + conditionPath(spot))
-    ])
-  ]);
+  return surfRangePath(spot);
+};
+const spotAirTemperature = spot => {
+  const tempMax = R.path(['Weather', 'temp_max', 0]);
+  const tempMin = R.path(['Weather', 'temp_min', 0]);
+
+  return 'Air: ' + tempMin(spot) + '-' + tempMax(spot);
 };
 const spotWaterTemperature = spot => {
   const waterTempMax = R.path(['WaterTemp', 'watertemp_max']);
   const waterTempMin = R.path(['WaterTemp', 'watertemp_min']);
 
-  const tempMax = R.path(['Weather', 'temp_max', 0]);
-  const tempMin = R.path(['Weather', 'temp_min', 0]);
-
-  return h(Row, {}, [
-    h(Col, {xs: 6}, [
-      h('span', {}, 'Weather: ' + tempMin(spot) + '-' + tempMax(spot))
-    ]),
-    h(Col, {xs: 6}, [
-      h('span', {}, 'Water: ' + waterTempMin(spot) + '-' + waterTempMax(spot))    ])
-  ]);
+  return 'Water: ' + waterTempMin(spot) + '-' + waterTempMax(spot);
 };
 
 const regionGraph = spot => {
@@ -95,30 +92,25 @@ const regionGraph = spot => {
   //so the paper doesn't have
   //a bottom margin
   const style = {
-    height: graphHeight + 18
+    height: graphHeight + 16
   };
 
-  return h(Row, {}, [
-    h(Col, {xs: 12}, [
-      h('div', {style: style}, [
-        h(Paper, {}, [
-          h(XYPlot, {
-            width: 360,
-            height: graphHeight,
-            animation: true
-          }, [
-            h(HorizontalGridLines),
-            tidesElement(spot),
-            sunPointsElement(spot),
-            h(XAxis, {
-              tickTotal: 24
-            }),
-            h(YAxis)
-          ])
-        ])
-      ])
+  return h(Paper, {zDepth: 2}, [
+    h(XYPlot, {
+      width: 360,
+      height: graphHeight,
+      animation: true
+    }, [
+      h(HorizontalGridLines),
+      tidesElement(spot),
+      sunPointsElement(spot),
+      h(XAxis, {
+        tickTotal: 24
+      }),
+      h(YAxis)
     ])
   ]);
+
 };
 
 

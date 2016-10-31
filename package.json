@@ -50,6 +50,7 @@
     "request-promise": "^4.1.1",
     "sass-loader": "^4.0.2",
     "style-loader": "^0.13.1",
+    "tap-nyan": "^0.0.2",
     "webpack": "^1.13.2"
   },
   "devDependencies": {
