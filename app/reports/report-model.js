@@ -8,7 +8,7 @@ const surfline = () => {
 
   const spot = (spotId, cb) => {
     let options = {
-      uri: URI + spotId,
+      uri: URI + spotId + '?days=1',
       json: true
     };
 

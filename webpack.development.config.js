@@ -1,5 +1,6 @@
 var path = require('path');
 var webpack = require('webpack');
+var ExtractTextPlugin = require("extract-text-webpack-plugin");
 
 module.exports = {
   devtool: 'cheap-module-source-map',
@@ -23,7 +24,8 @@ module.exports = {
   },
   plugins: [
     new webpack.optimize.OccurenceOrderPlugin(),
-    new webpack.NoErrorsPlugin()
+    new webpack.NoErrorsPlugin(),
+    new ExtractTextPlugin('styles.css')
   ],
   module: {
     loaders: [
@@ -36,9 +38,21 @@ module.exports = {
           plugins: ["react-hot-loader/babel"]
         }
       }, {
+        test: /\.jsx?$/,
+        loader: 'jsx?harmony',
+        include: /materia-ui/
+      }, {
         test: /\.html$/,
         exclude: /node_modules/,
         loader: 'file?name=[name].[ext]'
+      }, {
+        test: /\.scss$/,
+        loader: ExtractTextPlugin.extract('style-loader', 'css-loader!sass-loader'),
+        include: path.join(__dirname, 'app')
+      }, {
+        test: /\.css$/,
+        loader: 'style!css?modules',
+        include: /flexboxgrid/
       }
     ]
   }
