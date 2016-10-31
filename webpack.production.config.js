@@ -13,6 +13,7 @@ module.exports = {
     publicPath: '/'
   },
   plugins: [
+    new webpack.optimize.OccurenceOrderPlugin(),
     new ExtractTextPlugin('styles.css'),
     new webpack.DefinePlugin({
       'process.env': {
@@ -21,24 +22,29 @@ module.exports = {
     })
   ],
   module: {
-    loaders: [{
-      test: /\.js$/,
-      loaders: ['babel'],
-      include: path.join(__dirname, 'app'),
-      exclude: /(node_modules)/
-    }, {
-      test: /\.html$/,
-      exclude: /node_modules/,
-      loader: 'file?name=[name].[ext]'
-    }, {
-      test: /\.scss$/,
-      loader: ExtractTextPlugin.extract('style-loader', 'css-loader!sass-loader'),
-      include: path.join(__dirname, 'app')
-    }, {
-      test: /\.css$/,
-      loader: 'style!css?modules',
-      include: /flexboxgrid/
-    }
-]
+    loaders: [
+      {
+        test: /\.js$/,
+        loader: 'babel',
+        include: path.join(__dirname, 'app'),
+        exclude: /(node_modules)/
+      }, {
+        test: /\.jsx?$/,
+        loader: 'jsx?harmony',
+        include: /materia-ui/
+      }, {
+        test: /\.html$/,
+        exclude: /node_modules/,
+        loader: 'file?name=[name].[ext]'
+      }, {
+        test: /\.scss$/,
+        loader: ExtractTextPlugin.extract('style-loader', 'css-loader!sass-loader'),
+        include: path.join(__dirname, 'app')
+      }, {
+        test: /\.css$/,
+        loader: 'style!css?modules',
+        include: /flexboxgrid/
+      }
+    ]
   }
 };
