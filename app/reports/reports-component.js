@@ -48,14 +48,46 @@ export const reports = props => {
   ]);
 };
 
+
+const windData = spot => {
+  const windDates = R.pathOr([], ['Wind', 'dateStamp', 0])(spot);
+  const windTimes = R.pathOr([], ['Wind', 'periodSchedule', 0])(spot);
+  const windDirections = R.pathOr([], ['Wind', 'wind_direction', 0])(spot);
+  const windSpeeds = R.pathOr([], ['Wind', 'wind_speed', 0])(spot);
+
+
+  const fourArraysToObjects = (as, bs, cs, ds) =>{
+    return R.reduce((acc, [date, time, speed, direction]) =>
+                  R.append({date, time, speed, direction}, acc), [], R.transpose([as, bs, cs, ds]));
+  };
+
+  return fourArraysToObjects(windDates, windTimes, windSpeeds, windDirections);
+
+};
+
+const windColumn = wind => {
+  return h(Col, {xs: 2}, [
+    h('div', {}, wind.time),
+    h('div', {}, R.take(3, '' + wind.speed)),
+    h('div', {},  wind.direction)
+  ]);
+};
+
 const spotReport = spot => {
+  //drop 0200 and 2300
+  const wind = R.take(6, R.tail(windData(spot)));
 
   return (
     h('div', {key: spot.id}, [
-      //h(CardText, {}, spotWind(spot)),
       h(Divider),
       h(List, {}, [
-        h(Subheader, spotName(spot) ),
+        h('h2', spotName(spot) ),
+        h(ListItem,{}, [
+          h(Subheader, 'Wind' ),
+          h(Row, {center: 'xs'}, 
+            R.map(windColumn, wind )
+          )
+        ]),
         h(ListItem, {}, [
           h('span', {}, 'Conditions: ' ),
           h('span', {}, spotCondition(spot)),
@@ -116,7 +148,6 @@ const tideGraph = spot => {
   ]);
 
 };
-
 
 const rawTimeToHour = R.evolve({
   Rawtime: R.pipe(timeToMoment, momentToHour)
