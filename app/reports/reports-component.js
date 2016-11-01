@@ -42,7 +42,11 @@ export const reports = props => {
         h(Col, {xs: 6}, [
           'Sunset ',
           sunPointsTime(R.head(R.values(reports)), 'Sunset')
-        ])
+        ]),
+        h(Col, {xs: 12}, [
+          h('img', {src: 'https://cdip.ucsd.edu/recent/model_images/socal_now.png',
+                    width: graphWidth(browser)})
+        ]),
       ]),
 
       h(Row, {}, [
