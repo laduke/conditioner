@@ -109,7 +109,7 @@ const windColumn = wind => {
 
 
   const rotatedArrow = degrees => {
-    const rotate = `rotate(${degrees}deg)`;
+    const rotate = `rotate(${degrees - 180}deg)`;
 
     return {
       className: 'fa fa-long-arrow-up',
