@@ -48,14 +48,74 @@ export const reports = props => {
   ]);
 };
 
+const compass = ['N','NNE','NE','ENE','E','ESE','SE','SSE','S','SSW','SW','WSW','W','WNW','NW','NNW','N'];
+
+const windData = spot => {
+  const windDates = R.pathOr([], ['Wind', 'dateStamp', 0])(spot);
+  const windTimes = R.pathOr([], ['Wind', 'periodSchedule', 0])(spot);
+  const windDirections = R.pathOr([], ['Wind', 'wind_direction', 0])(spot);
+  const windSpeeds = R.pathOr([], ['Wind', 'wind_speed', 0])(spot);
+
+
+  const fourArraysToObjects = (as, bs, cs, ds) =>{
+    return R.reduce((acc, [date, time, speed, direction]) =>
+                  R.append({date, time, speed, direction}, acc), [], R.transpose([as, bs, cs, ds]));
+  };
+
+  return fourArraysToObjects(windDates, windTimes, windSpeeds, windDirections);
+
+};
+
+const windColumn = wind => {
+  const degreesToCompass = R.pipe(R.divide(R.__, 22.5),
+                               R.add(0.5),
+                               R.modulo(R.__, 16),
+                               Math.floor,
+                               R.nth(R.__, compass)
+                              );
+
+
+  const rotatedArrow = degrees => {
+    const rotate = `rotate(${degrees}deg)`;
+    console.log(rotate);
+
+    return {
+      className: 'fa fa-long-arrow-up',
+      style: {
+        transform: rotate
+      }
+    };
+  };
+
+  const time = wind.time.slice(0,2) + ':' + wind.time.slice(2);
+
+  return h(Col, {xs: 2}, [
+    h('div', {}, time),
+    h('div', {}, R.take(3, wind.speed + '') + 'kts'),
+    h('div', {},[
+      h('span', degreesToCompass(wind.direction)), 
+      h('span', ' '),
+      h('span', rotatedArrow(wind.direction))
+    ]
+     )
+  ]);
+};
+
 const spotReport = spot => {
+  //drop 0200 and 2300
+  const wind = R.take(6, R.tail(windData(spot)));
 
   return (
     h('div', {key: spot.id}, [
-      //h(CardText, {}, spotWind(spot)),
       h(Divider),
       h(List, {}, [
-        h(Subheader, spotName(spot) ),
+        h('h2', spotName(spot) ),
+        h(ListItem,{}, [
+          h(Subheader, 'Wind' ),
+          h(Row, {center: 'xs'}, 
+            R.map(windColumn, wind )
+           )
+        ]),
         h(ListItem, {}, [
           h('span', {}, 'Conditions: ' ),
           h('span', {}, spotCondition(spot)),
@@ -116,7 +176,6 @@ const tideGraph = spot => {
   ]);
 
 };
-
 
 const rawTimeToHour = R.evolve({
   Rawtime: R.pipe(timeToMoment, momentToHour)
