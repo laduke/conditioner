@@ -34,6 +34,14 @@ export const reports = props => {
       h(Row, {center: 'xs'}, [
         h(Col, {xs: 12}, [
           tideGraph(R.head(R.values(reports)), browser),
+        ]),
+        h(Col, {xs: 6}, [
+          'Sunrise ',
+          sunPointsTime(R.head(R.values(reports)), 'Sunrise')
+        ]),
+        h(Col, {xs: 6}, [
+          'Sunset ',
+          sunPointsTime(R.head(R.values(reports)), 'Sunset')
         ])
       ]),
 
@@ -49,6 +57,31 @@ export const reports = props => {
 };
 
 const compass = ['N','NNE','NE','ENE','E','ESE','SE','SSE','S','SSW','SW','WSW','W','WNW','NW','NNW','N'];
+
+const sunPointsTime = ( spot, type  ) => {
+
+
+  const sunPointsPath = R.pathOr([], ['Tide', 'SunPoints']);
+  const sunpointPropEq = R.propEq('type');
+
+
+  const sunpointTime = type => {
+    return R.pipe(
+      sunPointsPath,
+      R.filter(sunpointPropEq(type)),
+      R.map(R.prop('Rawtime')),
+      R.map(timeToMoment)
+    );
+  };
+
+  const sunpoint = sunpointTime(type);
+
+  const sunpoint_ = R.defaultTo(0, R.head(sunpoint(spot)));
+
+  return moment(sunpoint_).format('HH:mm');
+
+};
+
 
 const windData = spot => {
   const windDates = R.pathOr([], ['Wind', 'dateStamp', 0])(spot);
