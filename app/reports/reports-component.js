@@ -87,8 +87,10 @@ const windColumn = wind => {
     };
   };
 
+  const time = wind.time.slice(0,2) + ':' + wind.time.slice(2);
+
   return h(Col, {xs: 2}, [
-    h('div', {}, wind.time),
+    h('div', {}, time),
     h('div', {}, R.take(3, wind.speed + '') + 'kts'),
     h('div', {},[
       h('span', degreesToCompass(wind.direction)), 
