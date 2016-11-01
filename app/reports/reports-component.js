@@ -48,6 +48,7 @@ export const reports = props => {
   ]);
 };
 
+const compass = ['N','NNE','NE','ENE','E','ESE','SE','SSE','S','SSW','SW','WSW','W','WNW','NW','NNW','N'];
 
 const windData = spot => {
   const windDates = R.pathOr([], ['Wind', 'dateStamp', 0])(spot);
@@ -66,10 +67,35 @@ const windData = spot => {
 };
 
 const windColumn = wind => {
+  const degreesToCompass = R.pipe(R.divide(R.__, 22.5),
+                               R.add(0.5),
+                               R.modulo(R.__, 16),
+                               Math.floor,
+                               R.nth(R.__, compass)
+                              );
+
+
+  const rotatedArrow = degrees => {
+    const rotate = `rotate(${degrees}deg)`;
+    console.log(rotate);
+
+    return {
+      className: 'fa fa-long-arrow-up',
+      style: {
+        transform: rotate
+      }
+    };
+  };
+
   return h(Col, {xs: 2}, [
     h('div', {}, wind.time),
-    h('div', {}, R.take(3, '' + wind.speed)),
-    h('div', {},  wind.direction)
+    h('div', {}, R.take(3, wind.speed + '') + 'kts'),
+    h('div', {},[
+      h('span', degreesToCompass(wind.direction)), 
+      h('span', ' '),
+      h('span', rotatedArrow(wind.direction))
+    ]
+     )
   ]);
 };
 
@@ -86,7 +112,7 @@ const spotReport = spot => {
           h(Subheader, 'Wind' ),
           h(Row, {center: 'xs'}, 
             R.map(windColumn, wind )
-          )
+           )
         ]),
         h(ListItem, {}, [
           h('span', {}, 'Conditions: ' ),
