@@ -1,7 +1,7 @@
 import h from 'react-hyperscript';
 import R from 'ramda';
 import moment from 'moment';
-import {Legend, AreaChart, Area, CartesianGrid, XAxis, YAxis, Tooltip} from 'recharts';
+import {Legend, AreaChart, Area, CartesianGrid, XAxis, YAxis, Tooltip, ResponsiveContainer} from 'recharts';
 import Divider from 'material-ui/Divider';
 
 import {List, ListItem} from 'material-ui/List';
@@ -17,7 +17,7 @@ const momentToHour = R.curry(m => m.hour());
 const momentToMinute = R.curry(m => m.format('mm'));
 
 export const reports = props => {
-  const { reports } = props;
+  const { reports, browser } = props;
 
 
   return h(Row, {}, [
@@ -33,7 +33,7 @@ export const reports = props => {
 
       h(Row, {center: 'xs'}, [
         h(Col, {xs: 12}, [
-          tideGraph(R.head(R.values(reports))),
+          tideGraph(R.head(R.values(reports)), browser),
         ])
       ]),
 
@@ -77,7 +77,6 @@ const windColumn = wind => {
 
   const rotatedArrow = degrees => {
     const rotate = `rotate(${degrees}deg)`;
-    console.log(rotate);
 
     return {
       className: 'fa fa-long-arrow-up',
@@ -162,11 +161,22 @@ const spotWaterTemperature = spot => {
   return 'Water: ' + waterTempMin(spot) + '-' + waterTempMax(spot);
 };
 
-const tideGraph = spot => {
+const graphWidth = browser => {
+  let width = 480;
+  if(browser.greaterThan.extraSmall) width = 480;
+  if(browser.greaterThan.small) width = 768;
+  if(browser.greaterThan.medium) width = 992;
+  if(browser.greaterThan.large) width = 1200;
 
-  return h('div', {}, [
+  return width;
+};
+
+const tideGraph = ( spot, browser ) => {
+  const width = graphWidth(browser);
+
+  return h('div', {style:{margin: 'auto', width: width}}, [
     h('h2', 'Tides'),
-    h(AreaChart, {width: 368, height: 120, margin:{left: -40, top: 10, right: 20}, data: tideData(spot) }, [
+    h(AreaChart, {width: width, height: 120, margin:{left: -40, top: 10, right: 30}, data: tideData(spot) }, [
       h(Area, {type: 'monotone', dataKey: 'Height', stroke: '#8884d8' }),
       h(CartesianGrid, {stroke: '#ccc'}),
       h(XAxis, {dataKey: 'Time'}),
