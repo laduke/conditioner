@@ -34,30 +34,59 @@ export const reports = props => {
       h(Row, {center: 'xs'}, [
         h(Col, {xs: 12}, [
           tideGraph(R.head(R.values(reports)), browser),
-        ]),
-        h(Col, {xs: 6}, [
-          'Sunrise ',
-          sunPointsTime(R.head(R.values(reports)), 'Sunrise')
-        ]),
-        h(Col, {xs: 6}, [
-          'Sunset ',
-          sunPointsTime(R.head(R.values(reports)), 'Sunset')
-        ]),
-        h(Col, {xs: 12}, [
-          h('img', {src: 'https://cdip.ucsd.edu/recent/model_images/socal_now.png',
-                    width: graphWidth(browser)})
-        ]),
+          h(Row, {}, [
+            h(Col, {xs: 6}, [
+              'Sunrise ',
+              sunPointsTime(R.head(R.values(reports)), 'Sunrise')
+            ]),
+            h(Col, {xs: 6}, [
+              'Sunset ',
+              sunPointsTime(R.head(R.values(reports)), 'Sunset')
+            ])
+          ])
+        ])
       ]),
 
       h(Row, {}, [
+        // h(Col, {xs: 12}, [
+        //   h('img', {src: 'https://cdip.ucsd.edu/recent/model_images/socal_now.png',
+        //             width: graphWidth(browser)})
+        // ]),
         h(Col, {xs: 12}, [
-          R.values(R.map(spotReport, reports))
+          h(List, {}, [
+            R.values(R.map(spotReport, reports))
+          ])
         ])
       ])
 
     ])
 
   ]);
+};
+
+const spotReport = spot => {
+  //drop 0200 and 2300
+  const wind = R.take(6, R.tail(windData(spot)));
+
+  return h(ListItem, {
+    key: spot.id,
+    primaryText: spotName(spot),
+    secondaryText: spotCondition(spot) + ' ' + spotSurfRange(spot),
+    primaryTogglesNestedList: true,
+    nestedItems: [
+      h(ListItem, {
+        key: 'wind'
+      }, [
+        h(Row, {}, [
+          R.map(windColumn, wind )
+        ])
+      ]),
+      h(ListItem, {
+        key: 'temp',
+        primaryText: spotAirTemperature(spot) + ' ' + spotWaterTemperature(spot)
+      })
+    ]
+  });
 };
 
 const compass = ['N','NNE','NE','ENE','E','ESE','SE','SSE','S','SSW','SW','WSW','W','WNW','NW','NNW','N'];
@@ -125,7 +154,7 @@ const windColumn = wind => {
 
   const time = wind.time.slice(0,2) + ':' + wind.time.slice(2);
 
-  return h(Col, {xs: 2}, [
+  return h(Col, {key: wind.time, xs: 2}, [
     h('div', {}, time),
     h('div', {}, R.take(3, wind.speed + '') + 'kts'),
     h('div', {},[
@@ -135,37 +164,6 @@ const windColumn = wind => {
     ]
      )
   ]);
-};
-
-const spotReport = spot => {
-  //drop 0200 and 2300
-  const wind = R.take(6, R.tail(windData(spot)));
-
-  return (
-    h('div', {key: spot.id}, [
-      h(Divider),
-      h(List, {}, [
-        h('h2', spotName(spot) ),
-        h(ListItem,{}, [
-          h(Subheader, 'Wind' ),
-          h(Row, {center: 'xs'}, 
-            R.map(windColumn, wind )
-           )
-        ]),
-        h(ListItem, {}, [
-          h('span', {}, 'Conditions: ' ),
-          h('span', {}, spotCondition(spot)),
-          h('span', {}, ' '),
-          h('span', {}, spotSurfRange(spot))
-        ]),
-        h(ListItem, {}, [
-          h('span', {}, spotAirTemperature(spot)),
-          h('span', {}, ' '),
-          h('span', {}, spotWaterTemperature(spot))
-        ])
-      ])
-    ])
-  );
 };
 
 const spotName = spot => {
