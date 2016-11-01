@@ -1,5 +1,6 @@
-import { createStore, applyMiddleware } from 'redux';
+import { createStore, applyMiddleware, compose } from 'redux';
 import thunkMiddleware from 'redux-thunk';
+import { createResponsiveStoreEnhancer } from 'redux-responsive';
 
 
 
@@ -11,7 +12,10 @@ import reducers from './reducers';
 
 let store = createStore(reducers,
   window.devToolsExtension && window.devToolsExtension(),
-  applyMiddleware(thunkMiddleware)
+  compose(
+    createResponsiveStoreEnhancer({performanceMode: true}),
+    applyMiddleware(thunkMiddleware)
+  )
 );
 
 export default store;
