@@ -16,8 +16,13 @@ import store from './store';
 import App from './ReactApp';
 import { fetchSpot } from './reports/actions.js';
 
-store.dispatch(fetchSpot(4233));
-store.dispatch(fetchSpot(4874));
+store.dispatch(fetchSpot(4233));//salt creek
+store.dispatch(fetchSpot(53412));//blackies
+store.dispatch(fetchSpot(4875));//river jetties
+store.dispatch(fetchSpot(4874));//hb south
+store.dispatch(fetchSpot(4217));//seal
+store.dispatch(fetchSpot(4900));//porto
+store.dispatch(fetchSpot(4209));//malibu
 
 ReactDOM.render(
   h(Provider, {
