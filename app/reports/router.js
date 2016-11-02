@@ -1,5 +1,7 @@
 const bodyParser = require('body-parser');
 const router = require('express').Router();
+const cache = require('apicache').middleware;
+
 
 
 
@@ -13,7 +15,7 @@ const get = (req, res) => {
     .catch(err => console.log(err));
 };
 
-router.get('/:spotID', get);
+router.get('/:spotID', cache('1 hour'), get);
 
 
 
