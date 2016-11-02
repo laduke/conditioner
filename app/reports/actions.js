@@ -1,3 +1,20 @@
+import Future from 'fluture';
+
+const apiSpotPath = spotID => `/api/reports/${spotID}`;
+
+export const futureSpot = spotID => {
+  return dispatch => {
+    dispatch(requestSpot());
+    return new Future ((reject, resolve) => {
+      fetch(apiSpotPath(spotID))
+        .then(res => (res.json()))
+        .then(json => dispatch(receiveSpot(json)))
+        .then(data => resolve(data))
+        .catch(err => reject(err));
+    });
+  };
+};
+
 export function fetchSpot(spotID) {
   return dispatch => {
     dispatch(requestSpot());
