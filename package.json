@@ -53,7 +53,8 @@
     "sass-loader": "^4.0.2",
     "style-loader": "^0.13.1",
     "tap-nyan": "^0.0.2",
-    "webpack": "^1.13.2"
+    "webpack": "^1.13.2",
+    "whatwg-fetch": "^1.0.0"
   },
   "devDependencies": {
     "babel-cli": "^6.18.0",
