@@ -3,10 +3,11 @@ import {responsiveStateReducer} from 'redux-responsive';
 
 
 
-import { reports, requesting } from './reports/reducer';
+import { reports, requesting, tides } from './reports/reducer';
 
 let reducers = combineReducers({
   reports,
+  tides,
   browser: responsiveStateReducer,
   requesting
 });

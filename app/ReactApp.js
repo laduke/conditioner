@@ -5,6 +5,7 @@ import { Grid, Row, Col } from 'react-flexbox-grid/lib/index';
 
 
 import ConnectedReport from './reports/ConnectedReport';
+import ConnectedTides from './reports/ConnectedTides';
 
 const App = () => {
   return (
@@ -14,6 +15,7 @@ const App = () => {
         h('div', {style: {height: 10, backgroundColor: 'aqua'}})
       ])
     ]),
+    h(ConnectedTides),
     h(ConnectedReport)
   ])
   );

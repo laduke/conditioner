@@ -18,6 +18,22 @@ export const reports = (state = {}, action) => {
 
 };
 
+export const tides = (state = {}, action) => {
+
+  switch (action.type) {
+  case RECEIVE_SPOT: {
+
+    const updateTide = R.assoc(action.payload.id, action.payload.Tide);
+
+    return updateTide(state);
+  }
+  default: {
+    return state;
+  }
+  }
+
+};
+
 export const requesting = (state = false, action) => {
   switch (action.type) {
   case RECEIVE_SPOT: {
