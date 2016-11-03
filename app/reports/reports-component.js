@@ -8,11 +8,10 @@ import { Row, Col } from 'react-flexbox-grid/lib/index';
 
 
 import { renameKeys, timeToMoment } from '../helpers';
-import { tideGraph } from './tide-component';
 
 
 export const reports = props => {
-  const { reports, browser, tides } = props;
+  const { reports, browser } = props;
 
 
   return h(Row, {}, [

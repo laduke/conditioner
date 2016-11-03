@@ -5,7 +5,7 @@ import { Grid, Row, Col } from 'react-flexbox-grid/lib/index';
 
 
 import ConnectedReport from './reports/ConnectedReport';
-import ConnectedTides from './reports/ConnectedTides';
+import ConnectedTides from './tides/ConnectedTides';
 
 const App = () => {
   return (
