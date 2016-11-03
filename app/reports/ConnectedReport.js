@@ -5,11 +5,12 @@ import { connect } from 'react-redux';
 import { reports } from './reports-component';
 
 const mapStateToProps = state => {
-  const {reports, browser} = state;
+  const {reports, browser, tides} = state;
 
   return {
     reports,
-    browser
+    tides,
+    browser //TODO remove me
   };
 };
 
