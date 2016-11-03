@@ -10,9 +10,18 @@ import { Row, Col } from 'react-flexbox-grid/lib/index';
 import { renameKeys, timeToMoment } from '../helpers';
 
 
+const sortByLatitude = R.sortBy(R.prop('lat'));
+
+const sortReports = reports => {
+  return sortByLatitude(reports);
+};
+
 export const reports = props => {
   const { reports, browser } = props;
 
+  //reports comes in as an object with spot objects under each spotID key.
+  //turn this into an array of spots and sort
+  const spots = R.pipe(R.values, sortByLatitude, R.reverse);
 
   return h(Row, {}, [
     h(Col, {xs: 12}, [
@@ -25,13 +34,11 @@ export const reports = props => {
         // ]),
         h(Col, {xs: 12}, [
           h(List, {}, [
-            R.values(R.map(spotReport, reports))
+            R.map(spotReport, spots(reports))
           ])
         ])
       ])
-
     ])
-
   ]);
 };
 

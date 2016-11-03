@@ -7,7 +7,7 @@
     "start": "node ./app/server.js",
     "dev": "nodemon ./app/server.js --watch app & webpack-dev-server --config ./webpack.development.config.js --hot ",
     "test": "babel-tape-runner 'app/**/*.test.js'",
-    "build": "NODE_ENV=production webpack -p --config webpack.production.config.js --progress --colors"
+    "build": "NODE_ENV=production webpack -p --config webpack.production.config.js "
   },
   "engines": {
     "node": "6.4.0"
