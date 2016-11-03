@@ -5,6 +5,9 @@ import Divider from 'material-ui/Divider';
 import {List, ListItem} from 'material-ui/List';
 import Subheader from 'material-ui/Subheader';
 import { Row, Col } from 'react-flexbox-grid/lib/index';
+import {limeA400, blue800, green500, purple800} from 'material-ui/styles/colors';
+import ActionGrade from 'material-ui/svg-icons/action/grade';
+
 
 
 import { renameKeys, timeToMoment } from '../helpers';
@@ -42,6 +45,13 @@ export const reports = props => {
   ]);
 };
 
+const conditionToColor =  {
+  'good': limeA400,
+  'fair': green500,
+  'poor to fair': blue800,
+  'poor': purple800
+};
+
 const spotReport = spot => {
   //drop 0200 and 2300
   const wind = R.take(6, R.tail(windData(spot)));
@@ -49,6 +59,9 @@ const spotReport = spot => {
   return h(ListItem, {
     key: spot.id,
     primaryText: spotName(spot),
+    leftIcon:  h(ActionGrade, {
+      color: conditionToColor[spotCondition(spot)]
+    }),
     secondaryText: spotCondition(spot) + ' ' + spotSurfRange(spot),
     primaryTogglesNestedList: true,
     nestedItems: [
