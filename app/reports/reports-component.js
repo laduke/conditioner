@@ -46,8 +46,9 @@ export const reports = props => {
 };
 
 const conditionToColor =  {
-  'good': limeA400,
-  'fair': green500,
+  'good': green500,
+  'fair to good': green500,
+  'fair': limeA400,
   'poor to fair': blue800,
   'poor': purple800
 };
