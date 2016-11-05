@@ -39,3 +39,4 @@ dist
 yarn.lock
 wwwroot
 /app/site/.DS_Store
+/.env
