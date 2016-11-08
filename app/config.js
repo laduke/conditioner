@@ -1,5 +1,4 @@
-const dotenv = require('dotenv');
-dotenv.load();
+const dotenv = require('dotenv').config({silent: process.env.NODE_ENV !== 'development'});
 
 var config = module.exports;
 var PRODUCTION = process.env.NODE_ENV === 'production';
