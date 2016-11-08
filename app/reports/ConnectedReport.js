@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { reports } from './reports-component';
 
 const mapStateToProps = state => {
-  const {reports, browser, tides} = state;
+  const {reports, browser, tides, distances} = state;
 
   return {
     reports,
