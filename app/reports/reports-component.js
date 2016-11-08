@@ -58,12 +58,11 @@ const spotReport = spot => {
 
   return h(ListItem, {
     key: spot.id,
-    primaryText: spotName(spot),
+    primaryText: spotName(spot) ,
     leftIcon:  h(ActionGrade, {
       color: conditionToColor[spotCondition(spot)]
     }),
-    secondaryText: spotCondition(spot) + ' ' + spotSurfRange(spot),
-    primaryTogglesNestedList: true,
+    secondaryText: spotSecondaryText(spot),
     nestedItems: [
       h(ListItem, {
         key: 'wind'
@@ -78,6 +77,15 @@ const spotReport = spot => {
       })
     ]
   });
+};
+
+
+const spotSecondaryText = spot => {
+  const duration = R.pathOr('loading', [ 'distance','duration' ])(spot);
+
+  return spotCondition(spot) +
+    ' ' + spotSurfRange(spot) +
+    ' - Drive time: ' + duration;
 };
 
 const compass = ['N','NNE','NE','ENE','E','ESE','SE','SSE','S','SSW','SW','WSW','W','WNW','NW','NNW','N'];

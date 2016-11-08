@@ -9,7 +9,7 @@ config.express = {
   ip: '127.0.0.1'
 };
 
-config.googleMaps = {
+config.googleMapsAPIKey = {
   key: process.env.GOOGLE_MAPS_API_KEY || ''
 };
 

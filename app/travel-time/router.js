@@ -6,7 +6,7 @@ var config = require('../config');
 
 
 
-distance.apiKey = config.googleMaps;
+distance.apiKey = config.googleMapsAPIKey;
 
 
 
@@ -30,7 +30,7 @@ const get = (req, res) => {
 
 };
 
-router.get('/:origin/:destination', cache('1 hour'), get);
+router.get('/:origin/:destination', cache('5 minutes'), get);
 
 
 
