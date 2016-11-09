@@ -3,7 +3,7 @@ var webpack = require('webpack');
 var ExtractTextPlugin = require("extract-text-webpack-plugin");
 
 module.exports = {
-  devtool: 'cheap-module-source-map',
+  devtool: 'eval',
   entry: [
     'babel-polyfill',
     'whatwg-fetch',
