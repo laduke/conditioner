@@ -33,7 +33,7 @@ module.exports = {
       }, {
         test: /\.jsx?$/,
         loader: 'jsx?harmony',
-        include: /materia-ui/
+        include: /material-ui/
       }, {
         test: /\.html$/,
         exclude: /node_modules/,
