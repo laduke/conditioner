@@ -3,7 +3,7 @@ var webpack = require('webpack');
 var ExtractTextPlugin = require("extract-text-webpack-plugin");
 
 module.exports = {
-  devtool: 'cheap-module-source-map',
+  devtool: 'eval',
   entry: [
     'babel-polyfill',
     'whatwg-fetch',
@@ -33,7 +33,7 @@ module.exports = {
       }, {
         test: /\.jsx?$/,
         loader: 'jsx?harmony',
-        include: /materia-ui/
+        include: /material-ui/
       }, {
         test: /\.html$/,
         exclude: /node_modules/,
