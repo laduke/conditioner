@@ -64,6 +64,7 @@ const spotReport = spot => {
       color: conditionToColor[spotCondition(spot)]
     }),
     secondaryText: spotSecondaryText(spot),
+    secondaryTextLines: 2,
     primaryTogglesNestedList: true,
     nestedItems: [
       h(ListItem, {
@@ -85,9 +86,11 @@ const spotReport = spot => {
 const spotSecondaryText = spot => {
   const duration = R.pathOr('loading', [ 'distance','duration' ])(spot);
 
-  return spotCondition(spot) +
-    ' ' + spotSurfRange(spot) +
-    ' - Drive time: ' + duration;
+  return h('p', {}, [
+    spotCondition(spot) +
+      ' ' + spotSurfRange(spot) +
+    'Drive time: ' + duration
+  ]);
 };
 
 const compass = ['N','NNE','NE','ENE','E','ESE','SE','SSE','S','SSW','SW','WSW','W','WNW','NW','NNW','N'];
