@@ -64,6 +64,7 @@ const spotReport = spot => {
       color: conditionToColor[spotCondition(spot)]
     }),
     secondaryText: spotSecondaryText(spot),
+    primaryTogglesNestedList: true,
     nestedItems: [
       h(ListItem, {
         key: 'wind'
