@@ -8,9 +8,7 @@ config.express = {
   ip: '127.0.0.1'
 };
 
-config.googleMapsAPIKey = {
-  key: process.env.GOOGLE_MAPS_API_KEY || ''
-};
+config.googleMapsAPIKey =  process.env.GOOGLE_MAPS_API_KEY || '';
 
 config.mongodb = {
   port: process.env.MONGODB_PORT || 27017,
