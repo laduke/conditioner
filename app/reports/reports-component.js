@@ -84,7 +84,7 @@ const spotReport = spot => {
 
 
 const spotSecondaryText = spot => {
-  const duration = R.pathOr('loading', [ 'distance','duration' ])(spot);
+  const duration = R.pathOr('loading', [ 'distance','durationInTraffic' ]);
 
   return h('div', {}, [
     h('span', {}, [
@@ -92,7 +92,7 @@ const spotSecondaryText = spot => {
         ' ' + spotSurfRange(spot),
       h('br'),
       h('span', {}, [
-        ' Drive time: ' + duration
+        ' Drive time: ' + duration(spot)
       ])
     ])
   ]);
