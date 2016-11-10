@@ -60,7 +60,7 @@ const tideData = R.pipe(
 const sunPointsTime = ( spot, type  ) => {
 
 
-  const sunPointsPath = R.pathOr([], ['Tide', 'SunPoints']);
+  const sunPointsPath = R.pathOr([], ['SunPoints']);
   const sunpointPropEq = R.propEq('type');
 
 
