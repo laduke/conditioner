@@ -24,8 +24,8 @@ const tideGraph = ( spot, browser ) => {
 };
 
 const graphWidth = browser => {
-  let width = 480;
-  if(browser.greaterThan.extraSmall) width = 480;
+  let width = 386;
+  if(browser.greaterThan.extraSmall) width = 386;
   if(browser.greaterThan.small) width = 768;
   if(browser.greaterThan.medium) width = 992;
   if(browser.greaterThan.large) width = 1200;
