@@ -1,9 +1,12 @@
+import { fetchDistance } from '../travel-time/actions';
+
 export function fetchSpot(spotID) {
   return dispatch => {
     dispatch(requestSpot());
     return fetch(`/api/reports/${spotID}`)
       .then(response => response.json())
       .then(json => dispatch(receiveSpot(json)))
+      .then(() => dispatch(fetchDistance(spotID)))
       .catch(err => console.log(err));
   };
 }
@@ -23,3 +26,4 @@ function receiveSpot(json) {
     payload: json
   };
 }
+
